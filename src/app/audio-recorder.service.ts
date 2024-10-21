@@ -30,15 +30,16 @@ export class AudioRecorderService {
     }
   }
 
-  stopRecording(): Promise<void> {
+  async stopRecording(): Promise<Blob | null> {
     if (!this.isRecordingInProgress) {
-      return;
+      return null;
     }
 
-    return new Promise(resolve => {
+    return new Promise<Blob>(resolve => {
       let mimeType = this.mediaRecorder?.mimeType;
       this.mediaRecorder?.addEventListener('stop', () => {
-        let audioBlob = new Blob(this.currentRecord, {type: mimeType});
+        let audioBlob = new Blob(this.currentRecord ?? [], {type: mimeType});
+        this.currentRecord = [];
         resolve(audioBlob);
       });
 
@@ -48,5 +49,9 @@ export class AudioRecorderService {
       this.mediaRecorder = null;
       this.streamBeingCaptured = null;
     });
+  }
+
+  get isRecording(): boolean {
+    return this.isRecordingInProgress;
   }
 }

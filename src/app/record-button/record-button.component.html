@@ -1,4 +1,11 @@
-<button mat-fab extended>
-  <mat-icon>mic</mat-icon>
-  Удерживай, для записи
+<button mat-fab extended (click)="stopRecording()" *ngIf="isRecording else notRecording">
+  <mat-icon>mic_off</mat-icon>
+  Нажми, чтобы остановить запись
 </button>
+
+<ng-template #notRecording>
+  <button mat-fab extended (click)="startRecording()">
+    <mat-icon>mic</mat-icon>
+    Нажми для записи
+  </button>
+</ng-template>
